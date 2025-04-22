@@ -1,5 +1,5 @@
 import express from "express";
-
+import UserModel from "../models/User.model.js";
 const AuthRoutes = express.Router();
 
 //LOGIN ROUTES HANDLER
@@ -19,9 +19,21 @@ AuthRoutes.get("/register", (req, res) => {
   });
 });
 
-AuthRoutes.post("/register",(req,res)=>{
-    const newUser = req.body;
-    console.log(newUser);
-})
+AuthRoutes.post("/register", async (req, res) => {
+  try {
+    const newUser = new UserModel(req.body);
+    await newUser.save();
+    res.status(201);
+    res.json({
+      message: "User registered successfully",
+      user: newUser,
+    });
+  } catch (error) {
+    res.json({
+      message: "faild to save user",
+      error: error.message,
+    });
+  }
+});
 
 export default AuthRoutes;
