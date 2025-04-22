@@ -26,7 +26,7 @@ export const loginUser = async (req, res, next) => {
       if (err) {
         return next(err);
       }
-      res.status(200).json({ message: "Login successful" });
+      res.status(200).redirect("/");
     });
   })(req, res, next);
 
@@ -82,4 +82,15 @@ export const registerUser = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+// LOGOUT CONTROLLERS
+
+export const logout = (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 };

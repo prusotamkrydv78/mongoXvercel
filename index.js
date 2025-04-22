@@ -114,7 +114,7 @@ app.get("/", (req, res) => {
   res.render("home", {
     title: "BlogVerse - Home",
     posts: dummyPosts,
-    user: null,
+    user: req.user,
   });
 });
 app.use("/auth", AuthRoutes);
@@ -123,28 +123,28 @@ app.get("/explore", (req, res) => {
   res.render("explore", {
     title: "BlogVerse - Explore",
     posts: dummyPosts,
-    user: null,
+    user: req.user,
   });
 });
 
 app.get("/about", (req, res) => {
   res.render("about", {
     title: "BlogVerse - About Us",
-    user: null,
+    user: req.user,
   });
 });
 
 app.get("/contact", (req, res) => {
   res.render("contact", {
     title: "BlogVerse - Contact Us",
-    user: null,
+    user: req.user,
   });
 });
 
 app.get("/categories", (req, res) => {
   res.render("categories", {
     title: "BlogVerse - Categories",
-    user: null,
+    user: req.user,
   });
 });
 
@@ -153,20 +153,20 @@ app.get("/posts/:id", (req, res) => {
   if (!post) {
     return res.status(404).render("404", {
       title: "BlogVerse - Not Found",
-      user: null,
+      user: req.user,
     });
   }
   res.render("post", {
     title: `BlogVerse - ${post.title}`,
     post,
-    user: null,
+    user: req.user,
   });
 });
 
 app.use((req, res) => {
   res.status(404).render("404", {
     title: "BlogVerse - Page Not Found",
-    user: null,
+    user: req.user,
   });
 });
 

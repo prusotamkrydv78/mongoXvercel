@@ -2,6 +2,7 @@ import express from "express";
 import {
   login,
   loginUser,
+  logout,
   register,
   registerUser,
 } from "../controllers/Auth.contoller.js";
@@ -16,5 +17,7 @@ AuthRoutes.post("/login", loginUser);
 AuthRoutes.get("/register", register);
 
 AuthRoutes.post("/register", registerUser);
+// LOGOUT ROUTES 
+AuthRoutes.post("/logout", logout);
 
 export default AuthRoutes;
