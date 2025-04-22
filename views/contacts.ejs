@@ -1,0 +1,19 @@
+<div class="contacts-container">
+  <h2>All Contacts</h2>
+  
+  <% if (contacts && contacts.length > 0) { %>
+    <div class="contacts-list">
+      <% contacts.forEach(contact => { %>
+        <div class="contact-card">
+          <h3><%= contact.name %></h3>
+          <p><%= contact.address %></p>
+          <small>Added on: <%= new Date(contact.createdAt).toLocaleDateString() %></small>
+        </div>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <div class="no-contacts">
+      <p>No contacts found. <a href="/">Add a contact</a></p>
+    </div>
+  <% } %>
+</div>
