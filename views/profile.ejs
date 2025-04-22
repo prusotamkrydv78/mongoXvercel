@@ -1,0 +1,293 @@
+<%- include('./partials/header') %>
+
+<main class="profile-page">
+  <section class="profile-header">
+    <div class="container">
+      <div class="profile-cover-wrapper">
+        <div class="profile-cover" style="background-image: url('<%= user.coverImage || '/images/default-cover.jpg' %>');">
+          <div class="profile-cover-overlay"></div>
+        </div>
+        <div class="profile-avatar-wrapper">
+          <img src="<%= user.profileImage %>" alt="<%= user.username %>" class="profile-avatar">
+        </div>
+      </div>
+      
+      <div class="profile-info">
+        <div class="row align-items-end">
+          <div class="col-md-8">
+            <h1 class="profile-name"><%= user.fullName || user.username %></h1>
+            <p class="profile-bio"><%= user.bio || 'No bio available' %></p>
+            <div class="profile-meta">
+              <span class="profile-meta-item"><i class="fas fa-map-marker-alt"></i> <%= user.location || 'Location not specified' %></span>
+              <span class="profile-meta-item"><i class="fas fa-calendar-alt"></i> Joined <%= new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %></span>
+              <% if (user.website) { %>
+                <span class="profile-meta-item">
+                  <i class="fas fa-link"></i> 
+                  <a href="<%= user.website %>" target="_blank" rel="noopener noreferrer">
+                    <%= user.website.replace(/^https?:\/\//, '') %>
+                  </a>
+                </span>
+              <% } %>
+            </div>
+          </div>
+          <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <div class="profile-stats">
+              <div class="profile-stat">
+                <span class="profile-stat-value"><%= user.postsCount || 0 %></span>
+                <span class="profile-stat-label">Posts</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat-value"><%= user.followersCount || 0 %></span>
+                <span class="profile-stat-label">Followers</span>
+              </div>
+              <div class="profile-stat">
+                <span class="profile-stat-value"><%= user.followingCount || 0 %></span>
+                <span class="profile-stat-label">Following</span>
+              </div>
+            </div>
+            <div class="profile-actions mt-3">
+              <a href="/settings" class="btn btn-outline-primary btn-sm">
+                <i class="fas fa-cog"></i> Edit Profile
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="profile-content">
+    <div class="container">
+      <div class="profile-tabs">
+        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="posts-tab" data-bs-toggle="tab" data-bs-target="#posts" type="button" role="tab" aria-controls="posts" aria-selected="true">
+              <i class="fas fa-file-alt"></i> Posts
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="about-tab" data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false">
+              <i class="fas fa-user"></i> About
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab" aria-controls="saved" aria-selected="false">
+              <i class="fas fa-bookmark"></i> Saved
+            </button>
+          </li>
+        </ul>
+        
+        <div class="tab-content" id="profileTabsContent">
+          <!-- Posts Tab -->
+          <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+            <% if (user.posts && user.posts.length > 0) { %>
+              <div class="row">
+                <% user.posts.forEach(post => { %>
+                  <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card post-card h-100">
+                      <% if (post.coverImage) { %>
+                        <img src="<%= post.coverImage %>" class="card-img-top" alt="<%= post.title %>">
+                      <% } else { %>
+                        <div class="card-img-top post-card-placeholder">
+                          <i class="fas fa-file-alt"></i>
+                        </div>
+                      <% } %>
+                      <div class="card-body">
+                        <h5 class="card-title"><%= post.title %></h5>
+                        <p class="card-text text-truncate-2"><%= post.excerpt || post.content.substring(0, 120) + '...' %></p>
+                      </div>
+                      <div class="card-footer">
+                        <small class="text-muted">
+                          <i class="far fa-calendar-alt"></i> <%= new Date(post.createdAt).toLocaleDateString() %>
+                        </small>
+                        <a href="/posts/<%= post._id %>" class="btn btn-sm btn-outline-primary float-end">Read More</a>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <div class="empty-state">
+                <div class="empty-state-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>No posts yet</h3>
+                <p>Start sharing your thoughts with the world.</p>
+                <a href="/new-post" class="btn btn-primary">Create Your First Post</a>
+              </div>
+            <% } %>
+          </div>
+          
+          <!-- About Tab -->
+          <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
+            <div class="profile-about">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i>About Me</h5>
+                    </div>
+                    <div class="card-body">
+                      <p><%= user.bio || 'No bio available' %></p>
+                    </div>
+                  </div>
+                  
+                  <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Basic Information</h5>
+                    </div>
+                    <div class="card-body">
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <span><i class="fas fa-user me-2"></i>Full Name</span>
+                          <span class="text-muted"><%= user.fullName || 'Not specified' %></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <span><i class="fas fa-envelope me-2"></i>Email</span>
+                          <span class="text-muted"><%= user.email %></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <span><i class="fas fa-map-marker-alt me-2"></i>Location</span>
+                          <span class="text-muted"><%= user.location || 'Not specified' %></span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <span><i class="fas fa-calendar-alt me-2"></i>Joined</span>
+                          <span class="text-muted"><%= new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %></span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="card mb-4">
+                    <div class="card-header">
+                      <h5 class="mb-0"><i class="fas fa-link me-2"></i>Social Links</h5>
+                    </div>
+                    <div class="card-body">
+                      <ul class="list-group list-group-flush social-links">
+                        <% if (user.socialLinks && user.socialLinks.twitter) { %>
+                          <li class="list-group-item">
+                            <a href="<%= user.socialLinks.twitter %>" target="_blank" rel="noopener noreferrer">
+                              <i class="fab fa-twitter"></i> Twitter
+                            </a>
+                          </li>
+                        <% } %>
+                        <% if (user.socialLinks && user.socialLinks.facebook) { %>
+                          <li class="list-group-item">
+                            <a href="<%= user.socialLinks.facebook %>" target="_blank" rel="noopener noreferrer">
+                              <i class="fab fa-facebook"></i> Facebook
+                            </a>
+                          </li>
+                        <% } %>
+                        <% if (user.socialLinks && user.socialLinks.instagram) { %>
+                          <li class="list-group-item">
+                            <a href="<%= user.socialLinks.instagram %>" target="_blank" rel="noopener noreferrer">
+                              <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                          </li>
+                        <% } %>
+                        <% if (user.socialLinks && user.socialLinks.linkedin) { %>
+                          <li class="list-group-item">
+                            <a href="<%= user.socialLinks.linkedin %>" target="_blank" rel="noopener noreferrer">
+                              <i class="fab fa-linkedin"></i> LinkedIn
+                            </a>
+                          </li>
+                        <% } %>
+                        <% if (user.socialLinks && user.socialLinks.github) { %>
+                          <li class="list-group-item">
+                            <a href="<%= user.socialLinks.github %>" target="_blank" rel="noopener noreferrer">
+                              <i class="fab fa-github"></i> GitHub
+                            </a>
+                          </li>
+                        <% } %>
+                        <% if (user.website) { %>
+                          <li class="list-group-item">
+                            <a href="<%= user.website %>" target="_blank" rel="noopener noreferrer">
+                              <i class="fas fa-globe"></i> Website
+                            </a>
+                          </li>
+                        <% } %>
+                        
+                        <% if (!user.socialLinks || 
+                              (!user.socialLinks.twitter && 
+                               !user.socialLinks.facebook && 
+                               !user.socialLinks.instagram && 
+                               !user.socialLinks.linkedin && 
+                               !user.socialLinks.github && 
+                               !user.website)) { %>
+                          <li class="list-group-item text-center text-muted">
+                            No social links added
+                          </li>
+                        <% } %>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div class="card">
+                    <div class="card-header">
+                      <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Interests</h5>
+                    </div>
+                    <div class="card-body">
+                      <% if (user.interests && user.interests.length > 0) { %>
+                        <div class="interests-tags">
+                          <% user.interests.forEach(interest => { %>
+                            <span class="badge bg-light text-dark mb-2 me-2"><%= interest %></span>
+                          <% }); %>
+                        </div>
+                      <% } else { %>
+                        <p class="text-muted text-center">No interests specified</p>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Saved Tab -->
+          <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
+            <% if (user.savedPosts && user.savedPosts.length > 0) { %>
+              <div class="row">
+                <% user.savedPosts.forEach(post => { %>
+                  <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card post-card h-100">
+                      <% if (post.coverImage) { %>
+                        <img src="<%= post.coverImage %>" class="card-img-top" alt="<%= post.title %>">
+                      <% } else { %>
+                        <div class="card-img-top post-card-placeholder">
+                          <i class="fas fa-file-alt"></i>
+                        </div>
+                      <% } %>
+                      <div class="card-body">
+                        <h5 class="card-title"><%= post.title %></h5>
+                        <p class="card-text text-truncate-2"><%= post.excerpt || post.content.substring(0, 120) + '...' %></p>
+                      </div>
+                      <div class="card-footer">
+                        <small class="text-muted">
+                          <i class="far fa-calendar-alt"></i> <%= new Date(post.createdAt).toLocaleDateString() %>
+                        </small>
+                        <a href="/posts/<%= post._id %>" class="btn btn-sm btn-outline-primary float-end">Read More</a>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            <% } else { %>
+              <div class="empty-state">
+                <div class="empty-state-icon">
+                  <i class="fas fa-bookmark"></i>
+                </div>
+                <h3>No saved posts</h3>
+                <p>Bookmark posts to read them later.</p>
+                <a href="/explore" class="btn btn-primary">Explore Posts</a>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<%- include('./partials/footer') %>

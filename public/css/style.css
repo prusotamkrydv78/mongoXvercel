@@ -1610,6 +1610,10 @@ body {
     color: var(--dark-color-2);
 }
 
+/* Import Profile and Posts Styles */
+@import url('profile-posts.css');
+@import url('profile-minimal.css');
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
     .hero-section {

@@ -19,7 +19,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
-// session middlewares 
+// session middlewares
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -45,11 +45,11 @@ mongoose
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); 
+app.use(express.urlencoded({ extended: true }));
 // app.use(express.static())
 
-// Set EJS as the view engine 
-app.set("view engine", "ejs"); 
+// Set EJS as the view engine
+app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -159,6 +159,44 @@ app.get("/posts/:id", (req, res) => {
   res.render("post", {
     title: `BlogVerse - ${post.title}`,
     post,
+    user: req.user,
+  });
+});
+app.get("/profile", (req, res) => {
+  res.render("profile-minimal", {
+    title: "BlogVerse - Profile",
+    user: req.user || {
+      username: "john_doe",
+      fullName: "John Doe",
+      email: "john@example.com",
+      bio: "Web developer and tech enthusiast passionate about creating user-friendly applications. I love working with JavaScript, Node.js, and modern web frameworks.",
+      location: "San Francisco, CA",
+      website: "https://johndoe.dev",
+      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+      createdAt: new Date(2022, 3, 15),
+      postsCount: 12,
+      followersCount: 248,
+      followingCount: 186,
+      posts: dummyPosts.filter(post => post.creator.username === "john_doe"),
+      savedPosts: [dummyPosts[1]],
+      interests: ["Web Development", "JavaScript", "Node.js", "React", "UI/UX Design"],
+      socialLinks: {
+        twitter: "https://twitter.com/johndoe",
+        github: "https://github.com/johndoe",
+        linkedin: "https://linkedin.com/in/johndoe"
+      }
+    }
+  });
+});
+app.get("/new-post", (req, res) => {
+  res.render("new-post", {
+    title: "BlogVerse - New Post",
+    user: req.user,
+  });
+});
+app.get("/posts", (req, res) => {
+  res.render("posts", {
+    title: "BlogVerse - My Posts",
     user: req.user,
   });
 });

@@ -1,0 +1,249 @@
+<%- include('./partials/header') %>
+
+<main class="new-post-page">
+  <section class="new-post-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <h1 class="page-title">Create New Post</h1>
+          <p class="page-description">Share your thoughts, ideas, and stories with the world</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="new-post-content">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <div class="card">
+            <div class="card-body">
+              <form action="/posts/create" method="POST" enctype="multipart/form-data" id="newPostForm">
+                <div class="mb-4">
+                  <label for="postTitle" class="form-label">Post Title</label>
+                  <input type="text" class="form-control form-control-lg" id="postTitle" name="title" placeholder="Enter a captivating title" required>
+                </div>
+                
+                <div class="mb-4">
+                  <label for="postExcerpt" class="form-label">Excerpt</label>
+                  <textarea class="form-control" id="postExcerpt" name="excerpt" rows="2" placeholder="A brief summary of your post"></textarea>
+                  <small class="text-muted">This will be displayed in post previews. If left empty, the beginning of your post will be used.</small>
+                </div>
+                
+                <div class="mb-4">
+                  <label for="postCoverImage" class="form-label">Cover Image</label>
+                  <div class="cover-image-upload">
+                    <div class="cover-image-preview" id="coverImagePreview">
+                      <i class="fas fa-image"></i>
+                      <span>No image selected</span>
+                    </div>
+                    <div class="cover-image-actions">
+                      <label for="coverImageInput" class="btn btn-outline-primary">
+                        <i class="fas fa-upload me-2"></i>Upload Image
+                      </label>
+                      <input type="file" class="d-none" id="coverImageInput" name="coverImage" accept="image/*">
+                      <button type="button" class="btn btn-outline-secondary" id="removeCoverImage" disabled>
+                        <i class="fas fa-times me-2"></i>Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <label for="postCategory" class="form-label">Category</label>
+                    <select class="form-select" id="postCategory" name="category" required>
+                      <option value="" selected disabled>Select a category</option>
+                      <option value="technology">Technology</option>
+                      <option value="lifestyle">Lifestyle</option>
+                      <option value="travel">Travel</option>
+                      <option value="food">Food</option>
+                      <option value="health">Health</option>
+                      <option value="business">Business</option>
+                      <option value="education">Education</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="postTags" class="form-label">Tags</label>
+                    <input type="text" class="form-control" id="postTags" name="tags" placeholder="Enter tags separated by commas">
+                    <small class="text-muted">E.g., coding, web development, javascript</small>
+                  </div>
+                </div>
+                
+                <div class="mb-4">
+                  <label for="postContent" class="form-label">Content</label>
+                  <textarea class="form-control" id="postContent" name="content" rows="12" placeholder="Write your post content here..." required></textarea>
+                </div>
+                
+                <div class="row mb-4">
+                  <div class="col-md-6">
+                    <label for="postStatus" class="form-label">Status</label>
+                    <select class="form-select" id="postStatus" name="status">
+                      <option value="published">Published</option>
+                      <option value="draft">Save as Draft</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="postVisibility" class="form-label">Visibility</label>
+                    <select class="form-select" id="postVisibility" name="visibility">
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="mb-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="allowComments" name="allowComments" checked>
+                    <label class="form-check-label" for="allowComments">
+                      Allow comments on this post
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                  <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/posts'">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                  </button>
+                  <div>
+                    <button type="button" class="btn btn-outline-primary me-2" id="previewPostBtn">
+                      <i class="fas fa-eye me-2"></i>Preview
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-paper-plane me-2"></i>Publish Post
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="previewModalLabel">Post Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="post-preview">
+          <h1 id="previewTitle" class="preview-title"></h1>
+          <div class="preview-meta">
+            <span class="preview-author">
+              <img src="<%= user.profileImage %>" alt="<%= user.username %>" class="preview-author-avatar">
+              <%= user.username %>
+            </span>
+            <span class="preview-date">
+              <i class="far fa-calendar-alt"></i> <%= new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) %>
+            </span>
+            <span class="preview-category" id="previewCategory">
+              <i class="fas fa-folder"></i> <span id="previewCategoryText"></span>
+            </span>
+          </div>
+          <div id="previewCoverImage" class="preview-cover-image d-none">
+            <img src="" alt="Cover Image" id="previewCoverImageSrc">
+          </div>
+          <div id="previewContent" class="preview-content"></div>
+          <div id="previewTags" class="preview-tags"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Image Preview and Post Preview -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Cover Image Preview
+    const coverImageInput = document.getElementById('coverImageInput');
+    const coverImagePreview = document.getElementById('coverImagePreview');
+    const removeCoverImageBtn = document.getElementById('removeCoverImage');
+    
+    if (coverImageInput) {
+      coverImageInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            coverImagePreview.innerHTML = `<img src="${e.target.result}" alt="Cover Image Preview">`;
+            removeCoverImageBtn.disabled = false;
+          }
+          
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+    }
+    
+    if (removeCoverImageBtn) {
+      removeCoverImageBtn.addEventListener('click', function() {
+        coverImagePreview.innerHTML = `
+          <i class="fas fa-image"></i>
+          <span>No image selected</span>
+        `;
+        coverImageInput.value = '';
+        this.disabled = true;
+      });
+    }
+    
+    // Post Preview
+    const previewPostBtn = document.getElementById('previewPostBtn');
+    
+    if (previewPostBtn) {
+      previewPostBtn.addEventListener('click', function() {
+        const title = document.getElementById('postTitle').value || 'Untitled Post';
+        const content = document.getElementById('postContent').value || 'No content';
+        const category = document.getElementById('postCategory');
+        const categoryText = category.options[category.selectedIndex]?.text || 'Uncategorized';
+        const tags = document.getElementById('postTags').value;
+        
+        document.getElementById('previewTitle').textContent = title;
+        document.getElementById('previewCategoryText').textContent = categoryText;
+        document.getElementById('previewContent').innerHTML = content.replace(/\n/g, '<br>');
+        
+        // Handle tags
+        const tagsContainer = document.getElementById('previewTags');
+        if (tags.trim()) {
+          const tagsList = tags.split(',').map(tag => tag.trim());
+          tagsContainer.innerHTML = tagsList.map(tag => 
+            `<span class="badge bg-light text-dark me-2">${tag}</span>`
+          ).join('');
+        } else {
+          tagsContainer.innerHTML = '';
+        }
+        
+        // Handle cover image
+        const previewCoverImage = document.getElementById('previewCoverImage');
+        const previewCoverImageSrc = document.getElementById('previewCoverImageSrc');
+        
+        if (coverImageInput.files && coverImageInput.files[0]) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            previewCoverImageSrc.src = e.target.result;
+            previewCoverImage.classList.remove('d-none');
+          }
+          
+          reader.readAsDataURL(coverImageInput.files[0]);
+        } else {
+          previewCoverImage.classList.add('d-none');
+        }
+        
+        // Show the modal
+        const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
+        previewModal.show();
+      });
+    }
+  });
+</script>
+
+<%- include('./partials/footer') %>
