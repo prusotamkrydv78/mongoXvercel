@@ -1,6 +1,7 @@
 import UserModel from "../models/User.model.js";
 import bycrypt from "bcrypt";
 import { comparePassword, hashPassword } from "../utils/Auth.utils.js";
+import passport from "passport";
 const saltRounds = 10;
 
 ///LOGIN CONTOLLERS
@@ -12,28 +13,43 @@ export const login = (req, res) => {
   });
 };
 
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
-  try {
-    const user = await UserModel.findOne({ username });
-    //checking the user is exsit or not
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
     if (!user) {
-      return res
-        .status(401)
-        .json({ message: "Invalid credentials, username not found" });
+      return res.status(401).json({ message: info.message });
     }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      res.status(200).json({ message: "Login successful" });
+    });
+  })(req, res, next);
 
-    const isPasswordMatch = await comparePassword(password, user.password);
-    // comfirming the password
-    if (!isPasswordMatch) {
-      return res
-        .status(401)
-        .json({ message: "Invalid credentials, password is incorrect" });
-    }
-    res.status(200).json({ message: "Login successful" });
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
-  }
+  //   try {
+  //     const user = await UserModel.findOne({ username });
+  //     //checking the user is exsit or not
+  //     if (!user) {
+  //       return res
+  //         .status(401)
+  //         .json({ message: "Invalid credentials, username not found" });
+  //     }
+
+  //     const isPasswordMatch = await comparePassword(password, user.password);
+  //     // comfirming the password
+  //     if (!isPasswordMatch) {
+  //       return res
+  //         .status(401)
+  //         .json({ message: "Invalid credentials, password is incorrect" });
+  //     }
+  //     res.status(200).json({ message: "Login successful" });
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Internal server error" });
+  //   }
 };
 
 //REGISTER CONTOLLERS

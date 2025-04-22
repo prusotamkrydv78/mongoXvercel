@@ -4,6 +4,10 @@ import AuthRoutes from "./routes/Auth.routes.js";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import passport from "passport";
+import passportConfig from "./configs/passport.config.js";
+import session from 'express-session'
+import mongoStore from 'connect-mongo'
 dotenv.config();
 
 
@@ -13,6 +17,25 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+// session middlewares 
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: mongoStore.create({
+    mongoUrl: process.env.MONGODB_URI,
+    collectionName: 'sessions'
+  })
+}))
+// passport configuration/
+
+passportConfig();
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // Connect to MongoDB Atlas
 mongoose
