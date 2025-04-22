@@ -19,4 +19,9 @@ AuthRoutes.get("/register", (req, res) => {
   });
 });
 
+AuthRoutes.post("/register",(req,res)=>{
+    const newUser = req.body;
+    console.log(newUser);
+})
+
 export default AuthRoutes;

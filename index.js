@@ -1,27 +1,34 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const Contact = require('./models/Contact');
-const { default: AuthRoutes } = require('./routes/Auth.routes');
+import express from "express";
+import mongoose from "mongoose";
+import AuthRoutes from "./routes/Auth.routes.js";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+dotenv.config();
+
+
+// Setup __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('Could not connect to MongoDB Atlas', err));
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to MongoDB Atlas"))
+  .catch((err) => console.error("Could not connect to MongoDB Atlas", err));
 
 // Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extended: true })); 
+// app.use(express.static())
 
-// Set EJS as the view engine
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
- 
+// Set EJS as the view engine 
+app.set("view engine", "ejs"); 
+app.set("views", path.join(__dirname, "views"));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Dummy data for frontend
 const dummyUsers = [
@@ -79,15 +86,14 @@ const dummyPosts = [
   },
 ];
 // Routes
- 
- 
+
 app.get("/", (req, res) => {
   res.render("home", {
     title: "BlogVerse - Home",
     posts: dummyPosts,
     user: null,
   });
-}); 
+});
 app.use("/auth", AuthRoutes);
 
 app.get("/explore", (req, res) => {
