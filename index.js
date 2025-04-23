@@ -10,6 +10,7 @@ import session from 'express-session'
 import mongoStore from 'connect-mongo'
 import PostRoutes from "./routes/Post.routes.js";
 import cloudinary from "./configs/claudinary.config.js";
+import PublicRouter from "./routes/Public.routes.js";
 dotenv.config();
 
 
@@ -121,14 +122,15 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", AuthRoutes);
 app.use("/post",PostRoutes)
+app.use("/",PublicRouter)
 
-app.get("/explore", (req, res) => {
-  res.render("explore", {
-    title: "BlogVerse - Explore",
-    posts: dummyPosts,
-    user: req.user,
-  });
-});
+// app.get("/explore", (req, res) => {
+//   res.render("explore", {
+//     title: "BlogVerse - Explore",
+//     posts: dummyPosts,
+//     user: req.user,
+//   });
+// });
 
 app.get("/about", (req, res) => {
   res.render("about", {
@@ -192,6 +194,7 @@ app.get("/profile", (req, res) => {
   });
 }); 
 app.get("/posts", (req, res) => {
+
   res.render("posts", {
     title: "BlogVerse - My Posts",
     user: req.user,

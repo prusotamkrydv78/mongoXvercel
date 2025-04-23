@@ -115,6 +115,11 @@
     <script src="/js/theme-switcher.js"></script>
     <script src="/js/minimal-pages.js"></script>
 
+    <!-- Page-specific scripts -->
+    <% if (typeof page !== 'undefined' && page === 'new-post') { %>
+    <script src="/js/new-post.js"></script>
+    <% } %>
+
     <!-- Theme switching is handled by theme-switcher.js -->
     <!-- Minimal pages functionality is handled by minimal-pages.js -->
 </body>

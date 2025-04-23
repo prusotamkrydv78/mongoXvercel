@@ -5,6 +5,7 @@ export const newPost = (req, res) => {
   res.render("new-post", {
     title: "BlogVerse - New Post",
     user: req.user,
+    page: "new-post",
   });
 };
 
@@ -37,5 +38,15 @@ export const handleImageUpload = (req, res) => {
   res.json({
     message: "Upload successful!",
     url: req.file.path,
+  });
+};
+
+export const getAllPostsByUser = async (req, res) => {
+  const posts = await PostModel.find().populate("creator");
+  console.log(posts);
+  res.render("posts", {
+    title: "BlogVerse - Posts",
+    posts,
+    user: req.user,
   });
 };

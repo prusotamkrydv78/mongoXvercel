@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  createNewPost,
+  createNewPost, 
   handleImageUpload,
   newPost,
 } from "../controllers/Post.controller.js";
@@ -16,6 +16,7 @@ PostRoutes.post(
   upload.array("image", 5),
   createNewPost
 );
+
 
 PostRoutes.post("/upload-image", upload.single("image"), handleImageUpload);
 
