@@ -53,3 +53,14 @@ export const post = async (req, res) => {
     relatedPosts,
   });
 };
+
+export const posts = async (req, res) => {
+  const user = req.user;
+  const posts = await PostModel.find({ creator: user._id });
+  console.log(posts);
+  res.render("posts", {
+    title: "BlogVerse - My Posts",
+    user: req.user,
+    posts,
+  });
+}

@@ -113,12 +113,6 @@ app.get("/profile", (req, res) => {
     },
   });
 });
-app.get("/posts", (req, res) => {
-  res.render("posts", {
-    title: "BlogVerse - My Posts",
-    user: req.user,
-  });
-});
 
 app.get("/dashboard", (req, res) => {
   res.render("dashboard-minimal", {

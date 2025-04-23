@@ -6,6 +6,7 @@ import {
   getAllPosts,
   home,
   post,
+  posts,
 } from "../controllers/Public.controller.js";
 const PublicRouter = express.Router();
 
@@ -18,6 +19,8 @@ PublicRouter.get("/contact", contact);
 PublicRouter.get("/categories", categories);
 
 
-PublicRouter.get("/posts/:id",post);
+PublicRouter.get("/posts/:id",post)
+ 
+PublicRouter.get("/posts",posts);;
 
 export default PublicRouter;
