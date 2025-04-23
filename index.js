@@ -8,6 +8,7 @@ import passport from "passport";
 import passportConfig from "./configs/passport.config.js";
 import session from 'express-session'
 import mongoStore from 'connect-mongo'
+import PostRoutes from "./routes/Post.routes.js";
 dotenv.config();
 
 
@@ -118,6 +119,7 @@ app.get("/", (req, res) => {
   });
 });
 app.use("/auth", AuthRoutes);
+app.use("/post",PostRoutes)
 
 app.get("/explore", (req, res) => {
   res.render("explore", {
@@ -187,13 +189,7 @@ app.get("/profile", (req, res) => {
       }
     }
   });
-});
-app.get("/new-post", (req, res) => {
-  res.render("new-post", {
-    title: "BlogVerse - New Post",
-    user: req.user,
-  });
-});
+}); 
 app.get("/posts", (req, res) => {
   res.render("posts", {
     title: "BlogVerse - My Posts",

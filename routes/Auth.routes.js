@@ -5,7 +5,7 @@ import {
   logout,
   register,
   registerUser,
-} from "../controllers/Auth.contoller.js";
+} from "../controllers/Auth.controller.js";
 const AuthRoutes = express.Router();
 
 //LOGIN ROUTES HANDLER

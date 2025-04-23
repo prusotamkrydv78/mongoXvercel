@@ -18,13 +18,13 @@
         <div class="col-lg-8 offset-lg-2">
           <div class="card">
             <div class="card-body">
-              <form action="/posts/create" method="POST" enctype="multipart/form-data" id="newPostForm">
+              <form action="/post/new-post" method="POST"   id="newPostForm">
                 <div class="mb-4">
                   <label for="postTitle" class="form-label">Post Title</label>
                   <input type="text" class="form-control form-control-lg" id="postTitle" name="title" placeholder="Enter a captivating title" required>
                 </div>
                 
-                <div class="mb-4">
+                <!-- <div class="mb-4">
                   <label for="postExcerpt" class="form-label">Excerpt</label>
                   <textarea class="form-control" id="postExcerpt" name="excerpt" rows="2" placeholder="A brief summary of your post"></textarea>
                   <small class="text-muted">This will be displayed in post previews. If left empty, the beginning of your post will be used.</small>
@@ -69,14 +69,14 @@
                     <input type="text" class="form-control" id="postTags" name="tags" placeholder="Enter tags separated by commas">
                     <small class="text-muted">E.g., coding, web development, javascript</small>
                   </div>
-                </div>
+                </div> -->
                 
                 <div class="mb-4">
                   <label for="postContent" class="form-label">Content</label>
                   <textarea class="form-control" id="postContent" name="content" rows="12" placeholder="Write your post content here..." required></textarea>
                 </div>
                 
-                <div class="row mb-4">
+                <!-- <div class="row mb-4">
                   <div class="col-md-6">
                     <label for="postStatus" class="form-label">Status</label>
                     <select class="form-select" id="postStatus" name="status">
@@ -100,7 +100,7 @@
                       Allow comments on this post
                     </label>
                   </div>
-                </div>
+                </div> -->
                 
                 <div class="d-flex justify-content-between">
                   <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/posts'">
