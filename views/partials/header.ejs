@@ -168,11 +168,19 @@
                 </button>
               </div>
 
-              <div class="theme-toggle me-3">
+              <div class="theme-toggle me-2">
                 <button class="btn btn-icon" id="themeToggle">
                   <i class="fas fa-moon"></i>
                 </button>
               </div>
+
+              <% if (user) { %>
+              <div class="new-post-btn me-3">
+                <a href="/post/new-post" class="btn btn-primary btn-sm">
+                  <i class="fas fa-plus-circle me-md-1"></i><span class="d-none d-md-inline">New Post</span>
+                </a>
+              </div>
+              <% } %>
 
               <% if (user) { %>
               <div class="dropdown">
@@ -212,7 +220,7 @@
                     >
                   </li>
                   <li>
-                    <a class="dropdown-item" href="/new-post"
+                    <a class="dropdown-item" href="/post/new-post"
                       ><i class="fas fa-edit me-2"></i> New Post</a
                     >
                   </li>
