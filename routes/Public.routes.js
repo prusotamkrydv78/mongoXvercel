@@ -1,6 +1,23 @@
-import express from 'express'
-import { getAllPosts } from '../controllers/Public.controller.js';
-const PublicRouter = express.Router()
-PublicRouter.get("/explore", getAllPosts);
+import express from "express";
+import {
+  about,
+  categories,
+  contact,
+  getAllPosts,
+  home,
+  post,
+} from "../controllers/Public.controller.js";
+const PublicRouter = express.Router();
 
-export default PublicRouter
+PublicRouter.get("/", home);
+PublicRouter.get("/explore", getAllPosts);
+PublicRouter.get("/about", about);
+
+PublicRouter.get("/contact", contact);
+
+PublicRouter.get("/categories", categories);
+
+
+PublicRouter.get("/posts/:id",post);
+
+export default PublicRouter;
