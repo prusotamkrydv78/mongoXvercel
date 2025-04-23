@@ -9,6 +9,7 @@ import passportConfig from "./configs/passport.config.js";
 import session from 'express-session'
 import mongoStore from 'connect-mongo'
 import PostRoutes from "./routes/Post.routes.js";
+import cloudinary from "./configs/claudinary.config.js";
 dotenv.config();
 
 

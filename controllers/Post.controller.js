@@ -14,9 +14,17 @@ export const createNewPost = async (req, res) => {
     newPost.image = "upcomming feature";
     await newPost.save();
     res.redirect("/posts");
+    
   } catch (error) {
     res
       .status(500)
       .json({ message: "Internal server error,post creating", error });
   }
+};
+
+export const handleImageUpload = (req, res) => {
+    res.json({
+        message: 'Upload successful!',
+        url: req.file.path,
+      });
 };
