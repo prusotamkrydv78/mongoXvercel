@@ -1614,6 +1614,7 @@ body {
 @import url('profile-posts.css');
 @import url('profile-minimal.css');
 @import url('minimal-pages.css');
+@import url('multiple-image-upload.css');
 
 /* Responsive adjustments */
 @media (max-width: 992px) {

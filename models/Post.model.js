@@ -10,10 +10,18 @@ const postSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    image: {
-      type: String||Array,
-      required: true,
-    },
+    images: [
+      {
+        url:{
+            type:String,
+            required:true
+        },
+        public_id:{
+            type:String,
+            required:true
+        }
+      },
+    ],
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

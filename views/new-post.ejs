@@ -30,21 +30,58 @@
                 </div> -->
 
                 <div class="mb-4">
-                  <label for="postCoverImage" class="form-label">Cover Image</label>
-                  <div class="cover-image-upload">
-                    <div class="cover-image-preview" id="coverImagePreview">
-                      <i class="fas fa-image"></i>
-                      <span>No image selected</span>
+                  <label for="postImages" class="form-label">Post Images</label>
+                  <div class="post-images-upload">
+                    <div class="post-images-preview" id="imagesPreviewContainer">
+                      <div class="empty-state">
+                        <i class="fas fa-images"></i>
+                        <span>No images selected</span>
+                      </div>
                     </div>
-                    <div class="cover-image-actions">
-                      <label for="coverImageInput" class="btn btn-outline-primary">
-                        <i class="fas fa-upload me-2"></i>Upload Image
+                    <div class="post-images-actions mt-3">
+                      <label for="imagesInput" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-upload me-2"></i>Upload Images
                       </label>
-                      <input type="file" class="d-none" id="coverImageInput" name="image"  >
-                      <button type="button" class="btn btn-outline-secondary" id="removeCoverImage" disabled>
-                        <i class="fas fa-times me-2"></i>Remove
+                      <input type="file" class="d-none" id="imagesInput" name="image" multiple accept="image/*">
+                      <button type="button" class="btn btn-outline-info btn-sm" id="fetchRandomImages">
+                        <i class="fas fa-random me-2"></i>Add Random
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary btn-sm" id="removeAllImages" disabled>
+                        <i class="fas fa-times me-2"></i>Remove All
                       </button>
                     </div>
+                    <div id="randomImagesOptions" class="random-images-options mt-2 d-none">
+                      <div class="d-flex flex-wrap align-items-center">
+                        <div class="input-group me-3 mb-2" style="width: auto;">
+                          <span class="input-group-text">Images</span>
+                          <input type="number" class="form-control" id="randomImagesCount" min="1" max="10" value="3" style="width: 70px;">
+                          <button class="btn btn-sm btn-primary" type="button" id="confirmRandomImages">Fetch</button>
+                          <button class="btn btn-sm btn-outline-secondary" type="button" id="cancelRandomImages">
+                            <i class="fas fa-times"></i>
+                          </button>
+                        </div>
+
+                        <div class="mb-2">
+                          <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="randomImageType" id="randomNature" value="nature" checked>
+                            <label class="form-check-label" for="randomNature">Nature</label>
+                          </div>
+                          <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="randomImageType" id="randomArchitecture" value="architecture">
+                            <label class="form-check-label" for="randomArchitecture">Architecture</label>
+                          </div>
+                          <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="randomImageType" id="randomPeople" value="people">
+                            <label class="form-check-label" for="randomPeople">People</label>
+                          </div>
+                          <div class="form-check form-check-inline mb-0">
+                            <input class="form-check-input" type="radio" name="randomImageType" id="randomTechnology" value="technology">
+                            <label class="form-check-label" for="randomTechnology">Technology</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <small class="text-muted mt-2">You can select multiple images. The first image will be used as the cover image.</small>
                   </div>
                 </div>
 
@@ -163,33 +200,245 @@
 <!-- JavaScript for Image Preview and Post Preview -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Cover Image Preview
-    const coverImageInput = document.getElementById('coverImageInput');
-    const coverImagePreview = document.getElementById('coverImagePreview');
-    const removeCoverImageBtn = document.getElementById('removeCoverImage');
+    // Multiple Images Preview
+    const imagesInput = document.getElementById('imagesInput');
+    const imagesPreviewContainer = document.getElementById('imagesPreviewContainer');
+    const removeAllImagesBtn = document.getElementById('removeAllImages');
+    const fetchRandomImagesBtn = document.getElementById('fetchRandomImages');
+    const randomImagesOptions = document.getElementById('randomImagesOptions');
+    const confirmRandomImagesBtn = document.getElementById('confirmRandomImages');
+    const cancelRandomImagesBtn = document.getElementById('cancelRandomImages');
+    const randomImagesCount = document.getElementById('randomImagesCount');
+    let selectedFiles = [];
+    let isLoadingRandomImages = false;
 
-    if (coverImageInput) {
-      coverImageInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-          const reader = new FileReader();
+    if (imagesInput) {
+      imagesInput.addEventListener('change', function() {
+        if (this.files && this.files.length > 0) {
+          // Store the selected files
+          selectedFiles = Array.from(this.files);
 
-          reader.onload = function(e) {
-            coverImagePreview.innerHTML = `<img src="${e.target.result}" alt="Cover Image Preview">`;
-            removeCoverImageBtn.disabled = false;
-          }
+          // Clear the preview container
+          imagesPreviewContainer.innerHTML = '';
 
-          reader.readAsDataURL(this.files[0]);
+          // Create a grid for image previews
+          const previewGrid = document.createElement('div');
+          previewGrid.className = 'images-preview-grid';
+          imagesPreviewContainer.appendChild(previewGrid);
+
+          // Enable the remove all button
+          removeAllImagesBtn.disabled = false;
+
+          // Process each file
+          selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+              // Create preview item
+              const previewItem = document.createElement('div');
+              previewItem.className = 'preview-item';
+              previewItem.dataset.index = index;
+
+              // Create image element
+              const img = document.createElement('img');
+              img.src = e.target.result;
+              img.alt = `Image ${index + 1}`;
+              previewItem.appendChild(img);
+
+              // Create remove button
+              const removeBtn = document.createElement('button');
+              removeBtn.className = 'remove-image-btn';
+              removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+              removeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                removeImage(index);
+              });
+              previewItem.appendChild(removeBtn);
+
+              // Add cover badge to first image
+              if (index === 0) {
+                const coverBadge = document.createElement('div');
+                coverBadge.className = 'cover-badge';
+                coverBadge.textContent = 'Cover';
+                previewItem.appendChild(coverBadge);
+              }
+
+              // Add to grid
+              previewGrid.appendChild(previewItem);
+            };
+
+            reader.readAsDataURL(file);
+          });
         }
       });
     }
 
-    if (removeCoverImageBtn) {
-      removeCoverImageBtn.addEventListener('click', function() {
-        coverImagePreview.innerHTML = `
-          <i class="fas fa-image"></i>
-          <span>No image selected</span>
+    // Function to remove a specific image
+    function removeImage(index) {
+      // Remove the file from the array
+      selectedFiles.splice(index, 1);
+
+      // If no files left, show empty state
+      if (selectedFiles.length === 0) {
+        imagesPreviewContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-images"></i>
+            <span>No images selected</span>
+          </div>
         `;
-        coverImageInput.value = '';
+        removeAllImagesBtn.disabled = true;
+        imagesInput.value = '';
+        return;
+      }
+
+      // Recreate the DataTransfer object and FileList
+      const dataTransfer = new DataTransfer();
+      selectedFiles.forEach(file => {
+        dataTransfer.items.add(file);
+      });
+
+      // Update the file input
+      imagesInput.files = dataTransfer.files;
+
+      // Trigger change event to refresh previews
+      const event = new Event('change', { bubbles: true });
+      imagesInput.dispatchEvent(event);
+    }
+
+    // Random Images Functionality
+    if (fetchRandomImagesBtn) {
+      fetchRandomImagesBtn.addEventListener('click', function() {
+        randomImagesOptions.classList.toggle('d-none');
+      });
+    }
+
+    if (cancelRandomImagesBtn) {
+      cancelRandomImagesBtn.addEventListener('click', function() {
+        randomImagesOptions.classList.add('d-none');
+      });
+    }
+
+    if (confirmRandomImagesBtn) {
+      confirmRandomImagesBtn.addEventListener('click', async function() {
+        if (isLoadingRandomImages) return;
+
+        const count = parseInt(randomImagesCount.value) || 3;
+        const type = document.querySelector('input[name="randomImageType"]:checked').value || 'nature';
+
+        // Show loading state
+        isLoadingRandomImages = true;
+        confirmRandomImagesBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        confirmRandomImagesBtn.disabled = true;
+
+        try {
+          // Fetch random images from Unsplash API
+          const images = await fetchRandomImagesFromAPI(count, type);
+
+          if (images && images.length > 0) {
+            // Convert images to files and add to selection
+            await addRandomImagesToSelection(images);
+
+            // Hide options panel
+            randomImagesOptions.classList.add('d-none');
+          } else {
+            alert('Failed to fetch random images. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error fetching random images:', error);
+          alert('An error occurred while fetching random images. Please try again.');
+        } finally {
+          // Reset loading state
+          isLoadingRandomImages = false;
+          confirmRandomImagesBtn.innerHTML = 'Fetch';
+          confirmRandomImagesBtn.disabled = false;
+        }
+      });
+    }
+
+    // Function to fetch random images from API
+    async function fetchRandomImagesFromAPI(count, type) {
+      // Using Unsplash Source API for random images
+      const images = [];
+
+      for (let i = 0; i < count; i++) {
+        // Generate a random ID to ensure we get different images
+        const randomId = Math.floor(Math.random() * 1000);
+        const width = 800 + Math.floor(Math.random() * 400); // Random width between 800-1200
+        const height = 600 + Math.floor(Math.random() * 300); // Random height between 600-900
+
+        // Create image URL from Unsplash Source
+        const imageUrl = `https://source.unsplash.com/random/${width}x${height}?${type}&sig=${randomId}`;
+        images.push(imageUrl);
+      }
+
+      return images;
+    }
+
+    // Function to convert URLs to files and add to selection
+    async function addRandomImagesToSelection(imageUrls) {
+      const newFiles = [];
+
+      // Create a loading indicator in the preview container
+      if (selectedFiles.length === 0) {
+        imagesPreviewContainer.innerHTML = `
+          <div class="loading-indicator">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading random images...</span>
+          </div>
+        `;
+      }
+
+      // Fetch each image and convert to file
+      for (const url of imageUrls) {
+        try {
+          const response = await fetch(url);
+          const blob = await response.blob();
+
+          // Create a file from the blob
+          const filename = `random-image-${Date.now()}-${Math.floor(Math.random() * 1000)}.jpg`;
+          const file = new File([blob], filename, { type: 'image/jpeg' });
+
+          newFiles.push(file);
+        } catch (error) {
+          console.error('Error converting image URL to file:', error);
+        }
+      }
+
+      if (newFiles.length > 0) {
+        // Add new files to selected files
+        selectedFiles = [...selectedFiles, ...newFiles];
+
+        // Create a new DataTransfer object
+        const dataTransfer = new DataTransfer();
+
+        // Add all files to the DataTransfer object
+        selectedFiles.forEach(file => {
+          dataTransfer.items.add(file);
+        });
+
+        // Update the file input
+        imagesInput.files = dataTransfer.files;
+
+        // Trigger change event to refresh previews
+        const event = new Event('change', { bubbles: true });
+        imagesInput.dispatchEvent(event);
+
+        // Enable remove all button
+        removeAllImagesBtn.disabled = false;
+      }
+    }
+
+    // Remove all images
+    if (removeAllImagesBtn) {
+      removeAllImagesBtn.addEventListener('click', function() {
+        imagesPreviewContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-images"></i>
+            <span>No images selected</span>
+          </div>
+        `;
+        imagesInput.value = '';
+        selectedFiles = [];
         this.disabled = true;
       });
     }
@@ -220,19 +469,67 @@
           tagsContainer.innerHTML = '';
         }
 
-        // Handle cover image
+        // Handle images preview
         const previewCoverImage = document.getElementById('previewCoverImage');
         const previewCoverImageSrc = document.getElementById('previewCoverImageSrc');
 
-        if (coverImageInput.files && coverImageInput.files[0]) {
-          const reader = new FileReader();
+        // Create images gallery in preview if there are multiple images
+        const previewContent = document.getElementById('previewContent');
 
+        // Clear any existing gallery
+        const existingGallery = previewContent.querySelector('.preview-gallery');
+        if (existingGallery) {
+          existingGallery.remove();
+        }
+
+        if (selectedFiles.length > 0) {
+          // Show the first image as cover
+          const reader = new FileReader();
           reader.onload = function(e) {
             previewCoverImageSrc.src = e.target.result;
             previewCoverImage.classList.remove('d-none');
           }
+          reader.readAsDataURL(selectedFiles[0]);
 
-          reader.readAsDataURL(coverImageInput.files[0]);
+          // If there are more images, create a gallery
+          if (selectedFiles.length > 1) {
+            const galleryDiv = document.createElement('div');
+            galleryDiv.className = 'preview-gallery mt-4';
+
+            // Add a heading for additional images
+            const galleryHeading = document.createElement('h4');
+            galleryHeading.textContent = 'Additional Images';
+            galleryHeading.className = 'mb-3';
+            galleryDiv.appendChild(galleryHeading);
+
+            // Create a grid for the gallery
+            const galleryGrid = document.createElement('div');
+            galleryGrid.className = 'preview-gallery-grid';
+            galleryDiv.appendChild(galleryGrid);
+
+            // Add all images except the first one (which is the cover)
+            for (let i = 1; i < selectedFiles.length; i++) {
+              const file = selectedFiles[i];
+              const reader = new FileReader();
+
+              reader.onload = function(e) {
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'gallery-item';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = `Image ${i + 1}`;
+                imgContainer.appendChild(img);
+
+                galleryGrid.appendChild(imgContainer);
+              };
+
+              reader.readAsDataURL(file);
+            }
+
+            // Add the gallery after the content
+            previewContent.appendChild(galleryDiv);
+          }
         } else {
           previewCoverImage.classList.add('d-none');
         }

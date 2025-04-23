@@ -1,3 +1,4 @@
+import File_UploadModel from "../models/File_Upload.model.js";
 import PostModel from "../models/Post.model.js";
 
 export const newPost = (req, res) => {
@@ -8,37 +9,30 @@ export const newPost = (req, res) => {
 };
 
 export const createNewPost = async (req, res) => {
-  try {
-    const newPost = await new PostModel(req.body);
-    // Set creator ID
-    newPost.creator = req.user._id;
-
-    // Handle image upload
-    let imageUrl =
-      "https://res.cloudinary.com/dt38kxhnc/image/upload/v1710400850/default-post-image_wnhcun.jpg";
-
-    // Check if file was uploaded
-    if (req.file) {
-      // Use the path from multer
-      imageUrl = req.file.path;
-      console.log("Single file uploaded:", req.file);
-    } else if (req.files && req.files.length > 0) {
-      // If using array upload
-      imageUrl = req.files[0].path;
-      console.log("Multiple files uploaded:", req.files);
-    }
-
-    newPost.image = imageUrl;
-    await newPost.save();
-    res.status(201).redirect("/posts");
-  } catch (error) {
-    console.log(error);
-    res
-      .status(500)
-      .json({ message: "Internal server error,post creating", error });
+  const { title, content } = req.body;
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ message: "No image uploaded" });
   }
+  const images = await Promise.all(
+    req.files.map(async (file) => {
+      const newFile = new File_UploadModel({
+        url: file.path,
+        public_id: file.filename,
+        author: req.user._id,
+      });
+      await newFile.save();
+      return newFile;
+    })
+  );
+  const newPost = new PostModel({
+    title,
+    content,
+    images,
+    creator: req.user._id,
+  });
+  await newPost.save();
+  res.status(201).redirect("/posts");
 };
-
 export const handleImageUpload = (req, res) => {
   res.json({
     message: "Upload successful!",
