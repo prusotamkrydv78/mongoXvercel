@@ -116,80 +116,37 @@ function handleFilterButtons() {
 
 // Theme toggle
 function handleThemeToggle() {
+    // Theme toggle is now handled by the ThemeSwitcher object in theme-switcher.js
+    // This function is kept for backward compatibility
+    if (window.ThemeSwitcher) {
+        // ThemeSwitcher is already initialized in theme-switcher.js
+        return;
+    }
+
+    // Fallback implementation if ThemeSwitcher is not available
+    console.warn('ThemeSwitcher not found. Using fallback implementation.');
+
     const themeToggle = document.getElementById('themeToggle');
     if (!themeToggle) return;
 
     const body = document.body;
     const icon = themeToggle.querySelector('i');
 
-    // Function to set theme
-    function setTheme(theme) {
+    // Apply navbar scrolled class if already scrolled
+    function updateNavbarOnThemeChange() {
         const navbar = document.getElementById('mainNavbar');
-
-        if (theme === 'dark') {
-            body.classList.add('dark-theme');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-            localStorage.setItem('theme', 'dark');
-
-            // Update meta theme color for mobile browsers
-            const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-            if (metaThemeColor) {
-                metaThemeColor.setAttribute('content', '#1e293b'); // dark navbar color
-            } else {
-                const meta = document.createElement('meta');
-                meta.name = 'theme-color';
-                meta.content = '#1e293b';
-                document.head.appendChild(meta);
-            }
-        } else {
-            body.classList.remove('dark-theme');
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-            localStorage.setItem('theme', 'light');
-
-            // Update meta theme color for mobile browsers
-            const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-            if (metaThemeColor) {
-                metaThemeColor.setAttribute('content', '#1f2937'); // light navbar color
-            }
-        }
-
-        // Apply navbar scrolled class if already scrolled
         if (window.scrollY > 50 && navbar) {
             navbar.classList.add('navbar-scrolled');
         }
     }
 
-    // Check for saved theme preference or system preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        setTheme(savedTheme);
-    } else {
-        // Check system preference
-        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        if (prefersDarkScheme.matches) {
-            setTheme('dark');
-        } else {
-            setTheme('light');
-        }
-    }
-
-    // Listen for theme toggle click
-    themeToggle.addEventListener('click', function() {
-        if (body.classList.contains('dark-theme')) {
-            setTheme('light');
-        } else {
-            setTheme('dark');
-        }
+    // Listen for theme changes from ThemeSwitcher
+    document.addEventListener('themeChanged', function() {
+        updateNavbarOnThemeChange();
     });
 
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-        if (!localStorage.getItem('theme')) { // Only if user hasn't manually set a preference
-            setTheme(e.matches ? 'dark' : 'light');
-        }
-    });
+    // Update navbar on page load
+    updateNavbarOnThemeChange();
 }
 
 // Handle like and bookmark buttons

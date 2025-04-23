@@ -218,7 +218,7 @@
   padding: 3rem 0;
   margin-bottom: 2rem;
 }
-
+ 
 .page-title {
   font-size: 2rem;
   font-weight: 700;
@@ -230,11 +230,24 @@
   font-size: 1.1rem;
 }
 
+.dark-theme .page-title {
+  color: var(--dark-color) !important;
+}
+
+.dark-theme .page-description {
+  color: var(--gray-color-2);
+}
+
 .posts-filter {
   background-color: #fff;
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.dark-theme .posts-filter {
+  background-color: var(--light-color-2);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .stats-card {
@@ -430,36 +443,36 @@
     height: 200px;
     margin-bottom: 100px;
   }
-  
+
   .profile-avatar-wrapper {
     left: 50%;
     transform: translateX(-50%);
   }
-  
+
   .profile-info {
     text-align: center;
     margin-top: 1rem;
   }
-  
+
   .profile-meta {
     justify-content: center;
   }
-  
+
   .profile-stats {
     justify-content: center;
     margin-top: 1.5rem;
   }
-  
+
   .posts-header {
     padding: 2rem 0;
     text-align: center;
   }
-  
+
   .post-title-cell {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .post-thumbnail {
     margin-bottom: 0.5rem;
     margin-right: 0;

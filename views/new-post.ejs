@@ -161,7 +161,7 @@
 </main>
 
 <!-- Preview Modal -->
-<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true" data-bs-backdrop="static">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
@@ -209,7 +209,9 @@
     const confirmRandomImagesBtn = document.getElementById('confirmRandomImages');
     const cancelRandomImagesBtn = document.getElementById('cancelRandomImages');
     const randomImagesCount = document.getElementById('randomImagesCount');
-    let selectedFiles = [];
+    // Make selectedFiles accessible to other scripts
+    window.selectedFiles = [];
+    let selectedFiles = window.selectedFiles;
     let isLoadingRandomImages = false;
 
     if (imagesInput) {

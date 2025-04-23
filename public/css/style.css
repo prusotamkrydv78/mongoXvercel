@@ -1718,3 +1718,10 @@ body {
     white-space: nowrap;
   }
 }
+
+/* Import additional CSS files */
+@import url('profile-posts.css');
+@import url('profile-minimal.css');
+@import url('minimal-pages.css');
+@import url('multiple-image-upload.css');
+@import url('preview-modal.css');

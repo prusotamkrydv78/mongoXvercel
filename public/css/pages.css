@@ -233,19 +233,47 @@
     border-color: var(--primary-color);
 }
 
+/* New Post Page Styles */
+.new-post-header {
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.new-post-header .page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.new-post-header .page-description {
+    font-size: 1.1rem;
+    color: var(--gray-color);
+    max-width: 600px;
+}
+
+.new-post-content {
+    margin-bottom: 3rem;
+}
+ 
+
+.dark-theme .new-post-header .page-description {
+    color: var(--gray-color-2) !important;
+}
+
 /* Responsive Styles */
 @media (max-width: 767.98px) {
     .value-icon, .category-icon-sm {
         width: 60px;
         height: 60px;
     }
-    
+
     .contact-icon {
         width: 40px;
         height: 40px;
         font-size: 1rem;
     }
-    
+
     .team-card .card-img-top {
         height: 200px;
     }
@@ -255,14 +283,27 @@
     .about-header, .contact-header, .categories-header {
         padding: 2rem 0;
     }
-    
+
     .value-icon, .category-icon-sm {
         width: 50px;
         height: 50px;
     }
-    
+
     .social-link-lg {
         width: 40px;
         height: 40px;
+    }
+
+    .new-post-header .page-title {
+        font-size: 1.75rem;
+    }
+
+    .new-post-header .page-description {
+        font-size: 1rem;
+    }
+
+    .new-post-header {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
     }
 }

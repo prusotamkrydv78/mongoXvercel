@@ -13,8 +13,8 @@
 }
 
 .dark-theme .post-images-preview {
-  background-color: #1e293b;
-  border-color: #273c5a;
+  background-color: var(--light-color-2);
+  border-color: var(--light-color-3);
 }
 
 /* Empty state */
@@ -50,6 +50,10 @@
 
 .dark-theme .preview-item {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.dark-theme .post-images-preview .empty-state {
+  color: var(--gray-color-2);
 }
 
 .preview-item img {
@@ -114,6 +118,11 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+.dark-theme .remove-image-btn {
+  background-color: rgba(30, 41, 59, 0.8);
+  color: #ff6b6b;
+}
+
 .gallery-item img {
   width: 100%;
   height: 100%;
@@ -131,8 +140,8 @@
 }
 
 .dark-theme .random-images-options {
-  background-color: #1e293b;
-  border-color: #273c5a;
+  background-color: var(--light-color-2);
+  border-color: var(--light-color-3);
 }
 
 .random-images-options .input-group {
@@ -164,24 +173,92 @@
 }
 
 .dark-theme .loading-indicator {
-  color: #adb5bd;
+  color: var(--gray-color-2);
+}
+
+.dark-theme .form-check-input {
+  background-color: var(--light-color-3);
+  border-color: var(--light-color-3);
+}
+
+.dark-theme .form-check-label {
+  color: var(--dark-color-3);
 }
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
   .images-preview-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
   }
 
   .preview-item {
-    height: 120px;
+    height: 100px;
+  }
+
+  .post-images-preview {
+    min-height: 150px;
+    padding: 10px;
+  }
+
+  .post-images-preview .empty-state i {
+    font-size: 2rem;
+  }
+
+  .post-images-preview .empty-state span {
+    font-size: 0.9rem;
   }
 
   .preview-gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
   }
 
   .gallery-item {
-    height: 140px;
+    height: 120px;
+  }
+
+  .random-images-options {
+    padding: 8px;
+  }
+
+  .random-images-options .input-group {
+    max-width: 100%;
+  }
+
+  .random-images-options .form-check-inline {
+    margin-right: 5px;
+  }
+
+  .random-images-options .form-check-label {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 359px) {
+  .images-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+  }
+
+  .preview-item {
+    height: 80px;
+  }
+
+  .preview-gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .gallery-item {
+    height: 100px;
+  }
+
+  .post-images-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .post-images-actions .btn i {
+    margin-right: 0.25rem !important;
   }
 }
