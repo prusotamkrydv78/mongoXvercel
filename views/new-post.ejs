@@ -18,18 +18,17 @@
         <div class="col-lg-8 offset-lg-2">
           <div class="card">
             <div class="card-body">
-              <form action="/post/new-post" method="POST"   id="newPostForm">
+              <form action="/post/new-post" method="POST" enctype="multipart/form-data" id="newPostForm">
                 <div class="mb-4">
                   <label for="postTitle" class="form-label">Post Title</label>
                   <input type="text" class="form-control form-control-lg" id="postTitle" name="title" placeholder="Enter a captivating title" required>
                 </div>
-                
-                <!-- <div class="mb-4">
+               <!-- <div class="mb-4">
                   <label for="postExcerpt" class="form-label">Excerpt</label>
                   <textarea class="form-control" id="postExcerpt" name="excerpt" rows="2" placeholder="A brief summary of your post"></textarea>
                   <small class="text-muted">This will be displayed in post previews. If left empty, the beginning of your post will be used.</small>
-                </div>
-                
+                </div> -->
+
                 <div class="mb-4">
                   <label for="postCoverImage" class="form-label">Cover Image</label>
                   <div class="cover-image-upload">
@@ -41,15 +40,15 @@
                       <label for="coverImageInput" class="btn btn-outline-primary">
                         <i class="fas fa-upload me-2"></i>Upload Image
                       </label>
-                      <input type="file" class="d-none" id="coverImageInput" name="coverImage" accept="image/*">
+                      <input type="file" class="d-none" id="coverImageInput" name="image"  >
                       <button type="button" class="btn btn-outline-secondary" id="removeCoverImage" disabled>
                         <i class="fas fa-times me-2"></i>Remove
                       </button>
                     </div>
                   </div>
                 </div>
-                
-                <div class="row mb-4">
+
+                <!-- <div class="row mb-4">
                   <div class="col-md-6">
                     <label for="postCategory" class="form-label">Category</label>
                     <select class="form-select" id="postCategory" name="category" required>
@@ -69,13 +68,13 @@
                     <input type="text" class="form-control" id="postTags" name="tags" placeholder="Enter tags separated by commas">
                     <small class="text-muted">E.g., coding, web development, javascript</small>
                   </div>
-                </div> -->
-                
+                </div>  -->
+
                 <div class="mb-4">
                   <label for="postContent" class="form-label">Content</label>
                   <textarea class="form-control" id="postContent" name="content" rows="12" placeholder="Write your post content here..." required></textarea>
                 </div>
-                
+
                 <!-- <div class="row mb-4">
                   <div class="col-md-6">
                     <label for="postStatus" class="form-label">Status</label>
@@ -92,7 +91,7 @@
                     </select>
                   </div>
                 </div>
-                
+
                 <div class="mb-4">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="allowComments" name="allowComments" checked>
@@ -101,7 +100,7 @@
                     </label>
                   </div>
                 </div> -->
-                
+
                 <div class="d-flex justify-content-between">
                   <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/posts'">
                     <i class="fas fa-arrow-left me-2"></i>Cancel
@@ -168,22 +167,22 @@
     const coverImageInput = document.getElementById('coverImageInput');
     const coverImagePreview = document.getElementById('coverImagePreview');
     const removeCoverImageBtn = document.getElementById('removeCoverImage');
-    
+
     if (coverImageInput) {
       coverImageInput.addEventListener('change', function() {
         if (this.files && this.files[0]) {
           const reader = new FileReader();
-          
+
           reader.onload = function(e) {
             coverImagePreview.innerHTML = `<img src="${e.target.result}" alt="Cover Image Preview">`;
             removeCoverImageBtn.disabled = false;
           }
-          
+
           reader.readAsDataURL(this.files[0]);
         }
       });
     }
-    
+
     if (removeCoverImageBtn) {
       removeCoverImageBtn.addEventListener('click', function() {
         coverImagePreview.innerHTML = `
@@ -194,10 +193,10 @@
         this.disabled = true;
       });
     }
-    
+
     // Post Preview
     const previewPostBtn = document.getElementById('previewPostBtn');
-    
+
     if (previewPostBtn) {
       previewPostBtn.addEventListener('click', function() {
         const title = document.getElementById('postTitle').value || 'Untitled Post';
@@ -205,39 +204,39 @@
         const category = document.getElementById('postCategory');
         const categoryText = category.options[category.selectedIndex]?.text || 'Uncategorized';
         const tags = document.getElementById('postTags').value;
-        
+
         document.getElementById('previewTitle').textContent = title;
         document.getElementById('previewCategoryText').textContent = categoryText;
         document.getElementById('previewContent').innerHTML = content.replace(/\n/g, '<br>');
-        
+
         // Handle tags
         const tagsContainer = document.getElementById('previewTags');
         if (tags.trim()) {
           const tagsList = tags.split(',').map(tag => tag.trim());
-          tagsContainer.innerHTML = tagsList.map(tag => 
+          tagsContainer.innerHTML = tagsList.map(tag =>
             `<span class="badge bg-light text-dark me-2">${tag}</span>`
           ).join('');
         } else {
           tagsContainer.innerHTML = '';
         }
-        
+
         // Handle cover image
         const previewCoverImage = document.getElementById('previewCoverImage');
         const previewCoverImageSrc = document.getElementById('previewCoverImageSrc');
-        
+
         if (coverImageInput.files && coverImageInput.files[0]) {
           const reader = new FileReader();
-          
+
           reader.onload = function(e) {
             previewCoverImageSrc.src = e.target.result;
             previewCoverImage.classList.remove('d-none');
           }
-          
+
           reader.readAsDataURL(coverImageInput.files[0]);
         } else {
           previewCoverImage.classList.add('d-none');
         }
-        
+
         // Show the modal
         const previewModal = new bootstrap.Modal(document.getElementById('previewModal'));
         previewModal.show();

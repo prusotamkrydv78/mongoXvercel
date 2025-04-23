@@ -9,7 +9,7 @@ import upload from "../middlewares/Storage.middleware.js";
 const PostRoutes = express.Router();
 PostRoutes.get("/new-post", newPost);
 
-PostRoutes.post("/new-post", createNewPost);
+PostRoutes.post("/new-post", upload.array("image",5), createNewPost);
 
 PostRoutes.post("/upload-image", upload.single("image"), handleImageUpload);
 

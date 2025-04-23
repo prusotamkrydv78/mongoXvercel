@@ -10,12 +10,29 @@ export const newPost = (req, res) => {
 export const createNewPost = async (req, res) => {
   try {
     const newPost = await new PostModel(req.body);
+    // Set creator ID
     newPost.creator = req.user._id;
-    newPost.image = "upcomming feature";
+
+    // Handle image upload
+    let imageUrl =
+      "https://res.cloudinary.com/dt38kxhnc/image/upload/v1710400850/default-post-image_wnhcun.jpg";
+
+    // Check if file was uploaded
+    if (req.file) {
+      // Use the path from multer
+      imageUrl = req.file.path;
+      console.log("Single file uploaded:", req.file);
+    } else if (req.files && req.files.length > 0) {
+      // If using array upload
+      imageUrl = req.files[0].path;
+      console.log("Multiple files uploaded:", req.files);
+    }
+
+    newPost.image = imageUrl;
     await newPost.save();
-    res.redirect("/posts");
-    
+    res.status(201).redirect("/posts");
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .json({ message: "Internal server error,post creating", error });
@@ -23,8 +40,8 @@ export const createNewPost = async (req, res) => {
 };
 
 export const handleImageUpload = (req, res) => {
-    res.json({
-        message: 'Upload successful!',
-        url: req.file.path,
-      });
+  res.json({
+    message: "Upload successful!",
+    url: req.file.path,
+  });
 };
