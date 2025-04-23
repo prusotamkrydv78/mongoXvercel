@@ -5,17 +5,17 @@
     <div class="container">
       <div class="profile-minimal-layout">
         <div class="profile-avatar-minimal">
-          <img src="<%= user.profileImage %>" alt="<%= user.username %>" class="avatar-img">
+          <img src="<%= user.profileImage || 'https://ui-avatars.com/api/?name=' + user.username + '&background=4a6fa5&color=fff&size=128' %>" alt="<%= user.username %>" class="avatar-img" onerror="this.src='https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff&size=128';">
         </div>
-        
+
         <div class="profile-info-minimal">
           <h1 class="profile-name-minimal"><%= user.fullName || user.username %></h1>
           <p class="profile-username-minimal">@<%= user.username %></p>
-          
+
           <% if (user.bio) { %>
             <p class="profile-bio-minimal"><%= user.bio %></p>
           <% } %>
-          
+
           <div class="profile-meta-minimal">
             <% if (user.location) { %>
               <span class="meta-item"><i class="fas fa-map-marker-alt"></i> <%= user.location %></span>
@@ -23,14 +23,14 @@
             <span class="meta-item"><i class="fas fa-calendar-alt"></i> Joined <%= new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %></span>
             <% if (user.website) { %>
               <span class="meta-item">
-                <i class="fas fa-link"></i> 
+                <i class="fas fa-link"></i>
                 <a href="<%= user.website %>" target="_blank" rel="noopener noreferrer">
                   <%= user.website.replace(/^https?:\/\//, '') %>
                 </a>
               </span>
             <% } %>
           </div>
-          
+
           <div class="profile-stats-minimal">
             <div class="stat-item">
               <span class="stat-value"><%= user.postsCount || 0 %></span>
@@ -45,7 +45,7 @@
               <span class="stat-label">Following</span>
             </div>
           </div>
-          
+
           <div class="profile-actions-minimal">
             <a href="/settings" class="btn btn-outline-primary btn-sm">
               <i class="fas fa-cog"></i> Edit Profile
@@ -76,7 +76,7 @@
             </button>
           </li>
         </ul>
-        
+
         <div class="tab-content" id="profileTabsContent">
           <!-- Posts Tab -->
           <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
@@ -109,7 +109,7 @@
               </div>
             <% } %>
           </div>
-          
+
           <!-- About Tab -->
           <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="about-tab">
             <div class="about-section-minimal">
@@ -117,7 +117,7 @@
                 <h3>About Me</h3>
                 <p><%= user.bio || 'No bio available' %></p>
               </div>
-              
+
               <div class="about-info">
                 <h3>Basic Information</h3>
                 <ul class="info-list">
@@ -141,7 +141,7 @@
                   </li>
                 </ul>
               </div>
-              
+
               <% if (user.socialLinks && (user.socialLinks.twitter || user.socialLinks.facebook || user.socialLinks.instagram || user.socialLinks.linkedin || user.socialLinks.github) || user.website) { %>
                 <div class="about-social">
                   <h3>Social Links</h3>
@@ -179,7 +179,7 @@
                   </div>
                 </div>
               <% } %>
-              
+
               <% if (user.interests && user.interests.length > 0) { %>
                 <div class="about-interests">
                   <h3>Interests</h3>
@@ -192,7 +192,7 @@
               <% } %>
             </div>
           </div>
-          
+
           <!-- Saved Tab -->
           <div class="tab-pane fade" id="saved" role="tabpanel" aria-labelledby="saved-tab">
             <% if (user.savedPosts && user.savedPosts.length > 0) { %>

@@ -38,6 +38,7 @@
     <!-- for profile -->
      <link rel="stylesheet" href="/css/profile-posts.css" />
      <link rel="stylesheet" href="/css/profile-minimal.css" />
+     <link rel="stylesheet" href="/css/minimal-pages.css" />
   </head>
   <body>
     <!-- Navigation -->
@@ -185,9 +186,10 @@
                 >
                   <div class="avatar-container">
                     <img
-                      src="<%= user.profileImage %>"
+                      src="<%= user.profileImage || 'https://ui-avatars.com/api/?name=' + user.username + '&background=4a6fa5&color=fff&size=128' %>"
                       alt="<%= user.username %>"
                       class="avatar"
+                      onerror="this.src='https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff&size=128';"
                     />
                     <span class="avatar-status online"></span>
                   </div>

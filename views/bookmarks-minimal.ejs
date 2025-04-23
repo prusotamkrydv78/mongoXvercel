@@ -1,0 +1,194 @@
+<%- include('./partials/header') %>
+
+<main class="minimal-page">
+  <div class="minimal-container">
+    <div class="minimal-card">
+      <div class="minimal-card-header">
+        <div>
+          <h1 class="minimal-card-title">Bookmarks</h1>
+          <p class="minimal-card-subtitle">Your saved posts for later reading</p>
+        </div>
+      </div>
+
+      <div class="bookmarks-filter">
+        <div class="filter-group">
+          <input type="text" class="form-control" placeholder="Search bookmarks...">
+        </div>
+        <div class="filter-group">
+          <select class="form-select">
+            <option value="">All Categories</option>
+            <option value="technology">Technology</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="travel">Travel</option>
+            <option value="food">Food</option>
+            <option value="health">Health</option>
+            <option value="business">Business</option>
+            <option value="education">Education</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <select class="form-select">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="a-z">A-Z</option>
+            <option value="z-a">Z-A</option>
+          </select>
+        </div>
+      </div>
+
+      <% if (user.savedPosts && user.savedPosts.length > 0) { %>
+        <div class="bookmarks-grid">
+          <% user.savedPosts.forEach(post => { %>
+            <div class="bookmark-card">
+              <% if (post.coverImage) { %>
+                <div class="bookmark-image">
+                  <img src="<%= post.coverImage %>" alt="<%= post.title %>">
+                </div>
+              <% } %>
+              <div class="bookmark-content">
+                <h3 class="bookmark-title"><%= post.title %></h3>
+                <p class="bookmark-excerpt"><%= post.excerpt || post.content.substring(0, 120) + '...' %></p>
+                <div class="bookmark-meta">
+                  <div class="bookmark-author">
+                    <img src="<%= post.author.profileImage || 'https://ui-avatars.com/api/?name=' + post.author.username + '&background=4a6fa5&color=fff&size=128' %>" alt="<%= post.author.username %>" class="bookmark-author-avatar" onerror="this.src='https://ui-avatars.com/api/?name=User&background=4a6fa5&color=fff&size=128';">
+                    <span class="bookmark-author-name"><%= post.author.username %></span>
+                  </div>
+                  <div class="bookmark-date">
+                    <i class="far fa-calendar-alt me-1"></i> <%= new Date(post.createdAt).toLocaleDateString() %>
+                  </div>
+                </div>
+                <div class="bookmark-actions">
+                  <a href="/posts/<%= post._id %>" class="bookmark-btn">
+                    <i class="fas fa-book-open"></i> Read
+                  </a>
+                  <button type="button" class="bookmark-btn remove" data-post-id="<%= post._id %>">
+                    <i class="fas fa-trash-alt"></i> Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="text-center py-5">
+          <div class="mb-4" style="font-size: 3rem; color: #dee2e6;">
+            <i class="fas fa-bookmark"></i>
+          </div>
+          <h3>No bookmarks yet</h3>
+          <p class="text-muted mb-4">Start saving posts to read later by clicking the bookmark icon on any post.</p>
+          <a href="/explore" class="btn btn-primary">Explore Posts</a>
+        </div>
+      <% } %>
+    </div>
+
+    <% if (user.savedPosts && user.savedPosts.length > 0) { %>
+      <div class="minimal-card">
+        <div class="minimal-card-header">
+          <h2 class="minimal-card-title">Reading List</h2>
+          <button class="btn btn-outline-primary btn-sm">
+            <i class="fas fa-plus-circle me-2"></i>Create New List
+          </button>
+        </div>
+
+        <div class="list-group list-group-flush">
+          <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active">
+            <div>
+              <h6 class="mb-0">All Bookmarks</h6>
+              <small><%= user.savedPosts.length %> posts</small>
+            </div>
+            <span class="badge bg-primary rounded-pill"><%= user.savedPosts.length %></span>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">Read Later</h6>
+              <small>5 posts</small>
+            </div>
+            <span class="badge bg-secondary rounded-pill">5</span>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">Favorites</h6>
+              <small>3 posts</small>
+            </div>
+            <span class="badge bg-secondary rounded-pill">3</span>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-0">Technology</h6>
+              <small>2 posts</small>
+            </div>
+            <span class="badge bg-secondary rounded-pill">2</span>
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</main>
+
+<!-- JavaScript for Bookmarks Page -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Remove bookmark functionality
+    const removeButtons = document.querySelectorAll('.bookmark-btn.remove');
+
+    removeButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const postId = this.getAttribute('data-post-id');
+        const card = this.closest('.bookmark-card');
+
+        // This would normally be an AJAX call to your backend
+        // For UI demonstration, we'll just remove the card
+        if (card) {
+          card.style.opacity = '0';
+          setTimeout(() => {
+            card.style.display = 'none';
+
+            // Check if there are any visible cards left
+            const visibleCards = document.querySelectorAll('.bookmark-card[style="display: none;"]');
+            if (visibleCards.length === document.querySelectorAll('.bookmark-card').length) {
+              // No cards left, show empty state
+              const bookmarksGrid = document.querySelector('.bookmarks-grid');
+              if (bookmarksGrid) {
+                bookmarksGrid.innerHTML = `
+                  <div class="text-center py-5" style="grid-column: 1 / -1;">
+                    <div class="mb-4" style="font-size: 3rem; color: #dee2e6;">
+                      <i class="fas fa-bookmark"></i>
+                    </div>
+                    <h3>No bookmarks left</h3>
+                    <p class="text-muted mb-4">Start saving posts to read later by clicking the bookmark icon on any post.</p>
+                    <a href="/explore" class="btn btn-primary">Explore Posts</a>
+                  </div>
+                `;
+              }
+            }
+          }, 300);
+          card.style.transition = 'opacity 0.3s';
+        }
+      });
+    });
+
+    // Search functionality
+    const searchInput = document.querySelector('.bookmarks-filter input[type="text"]');
+    const bookmarkCards = document.querySelectorAll('.bookmark-card');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase().trim();
+
+        bookmarkCards.forEach(card => {
+          const title = card.querySelector('.bookmark-title').textContent.toLowerCase();
+          const excerpt = card.querySelector('.bookmark-excerpt').textContent.toLowerCase();
+          const author = card.querySelector('.bookmark-author-name').textContent.toLowerCase();
+
+          if (title.includes(searchTerm) || excerpt.includes(searchTerm) || author.includes(searchTerm)) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    }
+  });
+</script>
+
+<%- include('./partials/footer') %>

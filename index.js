@@ -201,6 +201,70 @@ app.get("/posts", (req, res) => {
   });
 });
 
+app.get("/dashboard", (req, res) => {
+  res.render("dashboard-minimal", {
+    title: "BlogVerse - Dashboard",
+    user: req.user || {
+      username: "john_doe",
+      fullName: "John Doe",
+      email: "john@example.com",
+      bio: "Web developer and tech enthusiast passionate about creating user-friendly applications.",
+      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+      createdAt: new Date(2022, 3, 15),
+      postsCount: 12,
+      totalViews: 1240,
+      totalComments: 85,
+      totalLikes: 320,
+      posts: dummyPosts.filter(post => post.creator.username === "john_doe"),
+      activities: [
+        { type: 'post', title: 'Created a new post: Getting Started with Node.js', date: new Date(2023, 5, 15), category: 'Technology' },
+        { type: 'comment', title: 'Commented on: The Future of Web Development', date: new Date(2023, 5, 14) },
+        { type: 'like', title: 'Liked: 10 Tips for Better Productivity', date: new Date(2023, 5, 13) },
+        { type: 'post', title: 'Updated post: JavaScript Best Practices', date: new Date(2023, 5, 10), category: 'Technology' }
+      ]
+    }
+  });
+});
+
+app.get("/settings", (req, res) => {
+  res.render("settings-minimal", {
+    title: "BlogVerse - Settings",
+    user: req.user || {
+      username: "john_doe",
+      fullName: "John Doe",
+      email: "john@example.com",
+      bio: "Web developer and tech enthusiast passionate about creating user-friendly applications.",
+      location: "San Francisco, CA",
+      website: "https://johndoe.dev",
+      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+      createdAt: new Date(2022, 3, 15),
+      emailPreferences: 'important',
+      socialLinks: {
+        twitter: "https://twitter.com/johndoe",
+        github: "https://github.com/johndoe",
+        linkedin: "https://linkedin.com/in/johndoe"
+      }
+    }
+  });
+});
+
+app.get("/bookmarks", (req, res) => {
+  res.render("bookmarks-minimal", {
+    title: "BlogVerse - Bookmarks",
+    user: req.user || {
+      username: "john_doe",
+      fullName: "John Doe",
+      profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+      savedPosts: dummyPosts.map(post => ({
+        ...post,
+        author: post.creator,
+        excerpt: post.content.substring(0, 120) + '...',
+        coverImage: post.image
+      }))
+    }
+  });
+});
+
 app.use((req, res) => {
   res.status(404).render("404", {
     title: "BlogVerse - Page Not Found",
