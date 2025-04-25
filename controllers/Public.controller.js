@@ -1,3 +1,4 @@
+import CommentModel from "../models/Comment.model.js";
 import PostModel from "../models/Post.model.js";
 
 export const getAllPosts = async (req, res) => {
@@ -38,6 +39,8 @@ export const categories = (req, res) => {
 
 export const post = async (req, res) => {
   const post = await PostModel.findById(req.params.id).populate("creator");
+  const comments = await CommentModel.find({ post: post._id }).populate("author");
+  console.log(comments);
   const relatedPosts = await PostModel.find({ _id: { $ne: req.params.id } });
   if (!post) {
     return res.status(404).render("404", {
@@ -50,12 +53,13 @@ export const post = async (req, res) => {
     post,
     user: req.user,
     relatedPosts,
+    comments,
   });
 };
 
 export const posts = async (req, res) => {
   const user = req.user;
-  if(user === null){
+  if (user === null) {
     return res.status(401).render("401", {
       title: "BlogVerse - Unauthorized",
       user: req.user,
@@ -68,4 +72,4 @@ export const posts = async (req, res) => {
     user: req.user,
     posts,
   });
-}
+};

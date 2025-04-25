@@ -11,6 +11,7 @@ import mongoStore from "connect-mongo";
 import PostRoutes from "./routes/Post.routes.js";
 import cloudinary from "./configs/claudinary.config.js";
 import PublicRouter from "./routes/Public.routes.js";
+import CommentsRoutes from "./routes/Comments.routes.js";
 dotenv.config();
 
 // Setup __dirname
@@ -72,14 +73,13 @@ const dummyUsers = [
     profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
   },
 ];
- 
+
 // Routes
 
+app.use("/", PublicRouter);
 app.use("/auth", AuthRoutes);
 app.use("/post", PostRoutes);
-app.use("/", PublicRouter);
- 
-
+app.use("/post", CommentsRoutes);
 
 app.get("/profile", (req, res) => {
   res.render("profile-minimal", {

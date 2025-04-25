@@ -24,7 +24,7 @@
         >
           <div class="d-flex align-items-center mb-2 mb-md-0">
             <img
-              src="<%= post.creator.profileImage %>"
+              src="<%= post.creator.profilePic %>"
               alt="<%= post.creator.username %>"
               class="rounded-circle me-3"
               width="48"
@@ -33,7 +33,7 @@
             <div>
               <div class="fw-bold"><%= post.creator.username %></div>
               <div class="post-meta text-muted small">
-                <%= post.creator.bio || 'Writer at BlogVerse' %>
+                <%= post.creator.bio.slice(0,50) || 'Writer at BlogVerse' %>...
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@
         <div class="card-body p-4">
           <div class="d-flex flex-column flex-md-row">
             <img
-              src="<%= post.creator.profileImage %>"
+              src="<%= post.creator.profilePic %>"
               alt="<%= post.creator.username %>"
               class="rounded-circle me-md-4 mb-3 mb-md-0"
               width="100"
@@ -227,12 +227,13 @@
         <div class="card mb-4 border-0 shadow-sm">
           <div class="card-body p-4 comment-form">
             <h5 class="mb-3 fw-bold">Leave a Comment</h5>
-            <form>
+            <form method="post" action="/post/<%= post.id %>/comment">
               <div class="mb-3">
                 <textarea
                   class="form-control"
                   rows="4"
                   placeholder="Write your thoughts here..."
+                  name="content"
                   required
                 ></textarea>
               </div>
@@ -244,16 +245,16 @@
         </div>
 
         <!-- Comments List -->
-        <% if (post.comments.length === 0) { %>
+        <% if (comments.length === 0) { %>
         <div class="text-center py-5">
           <i class="far fa-comment-dots fa-3x text-muted mb-3"></i>
           <p class="lead">No comments yet. Be the first to comment!</p>
         </div>
-        <% } else { %> <% post.comments.forEach(comment => { %>
+        <% } else { %> <% comments.forEach(comment => { %>
         <div class="comment mb-4 shadow-sm">
           <div class="d-flex">
             <img
-              src="<%= comment.author.profileImage %>"
+              src="<%= comment.author.profilePic %>"
               alt="<%= comment.author.username %>"
               class="rounded-circle me-3"
               width="48"
