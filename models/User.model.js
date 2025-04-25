@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
+    fullName: {
+      trim: true,
+      type: String,
+      required: false,
+    }, 
     username: {
       trim: true,
       type: String,
@@ -22,7 +27,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    profileImage: {
+    profilePic: {
       type: String,
       default: "https://via.placeholder.com/100?text=User"
     },

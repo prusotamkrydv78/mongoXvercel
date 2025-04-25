@@ -62,7 +62,9 @@ export const register = (req, res) => {
 };
 
 export const registerUser = async (req, res) => {
-  const { username, email } = req.body;
+  const { username, email } = req.body; 
+  const profilePic = req.file.path;
+  req.body.profilePic = profilePic;
   const user = await UserModel.findOne({ username, email });
   try {
     if (user) {
