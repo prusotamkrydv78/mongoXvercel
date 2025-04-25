@@ -1,0 +1,309 @@
+<%- include('partials/header') %>
+
+<div class="posts-page">
+  <div class="container">
+    <!-- Posts Header -->
+    <div class="posts-header">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h1 class="page-title">My Posts</h1>
+          <p class="page-description">Manage all your blog posts in one place</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <a href="/post/new-post" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>Create New Post
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posts Content -->
+    <div class="posts-content">
+      <!-- Search and Filter -->
+      <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-lg-4 col-md-6">
+              <div class="input-group">
+                <span class="input-group-text bg-transparent border-end-0">
+                  <i class="fas fa-search"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control border-start-0"
+                  placeholder="Search your posts..."
+                />
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <select class="form-select">
+                <option selected>All Categories</option>
+                <option>Technology</option>
+                <option>Lifestyle</option>
+                <option>Travel</option>
+                <option>Food</option>
+              </select>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <select class="form-select">
+                <option selected>All Status</option>
+                <option>Published</option>
+                <option>Draft</option>
+                <option>Archived</option>
+              </select>
+            </div>
+            <div class="col-lg-2 col-md-6">
+              <select class="form-select">
+                <option selected>Newest First</option>
+                <option>Oldest First</option>
+                <option>Most Views</option>
+                <option>Most Comments</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="row g-4 mb-4">
+        <div class="col-lg-3 col-md-6">
+          <div class="card border-0 shadow-sm h-100 stats-card stats-card-posts">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stats-icon">
+                  <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="stats-number"><%= posts ? posts.length : 0 %></h3>
+                  <p class="stats-label mb-0">Total Posts</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card border-0 shadow-sm h-100 stats-card stats-card-views">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stats-icon">
+                  <i class="fas fa-eye"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="stats-number">0</h3>
+                  <p class="stats-label mb-0">Total Views</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card border-0 shadow-sm h-100 stats-card stats-card-comments">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stats-icon">
+                  <i class="fas fa-comment"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="stats-number">0</h3>
+                  <p class="stats-label mb-0">Comments</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card border-0 shadow-sm h-100 stats-card stats-card-likes">
+            <div class="card-body">
+              <div class="d-flex align-items-center">
+                <div class="stats-icon">
+                  <i class="fas fa-heart"></i>
+                </div>
+                <div class="ms-3">
+                  <h3 class="stats-number">0</h3>
+                  <p class="stats-label mb-0">Likes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts List -->
+      <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+          <% if (posts && posts.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-hover posts-table mb-0">
+              <thead>
+                <tr>
+                  <th style="width: 50%">Post</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody class="posts-list">
+                <% posts.forEach(post => { %>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="post-image-container me-3">
+                        <img
+                          src="<%= post.images && post.images[0] ? post.images[0].url : 'https://via.placeholder.com/60x60?text=No+Image' %>"
+                          alt="<%= post.title %>"
+                          class="post-image"
+                        />
+                      </div>
+                      <div>
+                        <h6 class="post-title mb-1"><%= post.title %></h6>
+                        <p class="post-excerpt mb-0">
+                          <%= post.content.substring(0, 60) %>...
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark">Uncategorized</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-success">Published</span>
+                  </td>
+                  <td>
+                    <span class="post-date"
+                      ><%= post.createdAt.toLocaleDateString() %></span
+                    >
+                  </td>
+                  <td>
+                    <div class="post-actions">
+                      <a
+                        href="/posts/<%= post.id %>"
+                        class="btn btn-sm btn-outline-primary me-1"
+                        title="View"
+                      >
+                        <i class="fas fa-eye"></i>
+                      </a>
+                      <a
+                        href="/posts/edit/<%= post.id %>"
+                        class="btn btn-sm btn-outline-secondary me-1"
+                        title="Edit"
+                      >
+                        <i class="fas fa-edit"></i>
+                      </a>
+                      <button
+                        class="btn btn-sm btn-outline-danger"
+                        title="Delete"
+                        data-bs-toggle="modal"
+                        data-bs-target="#deletePostModal"
+                        data-post-id="<%= post.id %>"
+                        data-post-title="<%= post.title %>"
+                      >
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          <% } else { %>
+          <div class="empty-state text-center py-5">
+            <div class="empty-state-icon mb-4">
+              <i class="fas fa-file-alt fa-4x text-muted"></i>
+            </div>
+            <h3 class="fw-bold mb-3">No Posts Yet</h3>
+            <p class="text-muted mb-4">You haven't created any posts yet. Start sharing your thoughts and ideas with the world!</p>
+            <a href="/post/new-post" class="btn btn-primary">
+              <i class="fas fa-plus-circle me-2"></i>Create Your First Post
+            </a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <% if (posts && posts.length > 0) { %>
+      <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Post Modal -->
+<div
+  class="modal fade"
+  id="deletePostModal"
+  tabindex="-1"
+  aria-labelledby="deletePostModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deletePostModalLabel">Confirm Delete</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Are you sure you want to delete the post
+          <span id="deletePostTitle" class="text-danger fw-bold"></span>? This
+          action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+        <form id="deletePostForm" method="POST">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Set up delete modal
+  const deletePostModal = document.getElementById('deletePostModal');
+  if (deletePostModal) {
+    deletePostModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const postId = button.getAttribute('data-post-id');
+      const postTitle = button.getAttribute('data-post-title');
+      
+      const deletePostTitle = document.getElementById('deletePostTitle');
+      const deletePostForm = document.getElementById('deletePostForm');
+      
+      deletePostTitle.textContent = postTitle;
+      deletePostForm.action = `/posts/delete/${postId}?_method=DELETE`;
+    });
+  }
+</script>
+
+<%- include('partials/footer') %>

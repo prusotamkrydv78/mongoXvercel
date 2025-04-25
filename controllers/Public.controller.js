@@ -1,8 +1,7 @@
 import PostModel from "../models/Post.model.js";
 
 export const getAllPosts = async (req, res) => {
-  const allPosts = await PostModel.find();
-  console.log(allPosts);
+  const allPosts = await PostModel.find().populate("creator");
   res.render("explore", {
     title: "BlogVerse - Posts",
     user: req.user,
@@ -11,7 +10,7 @@ export const getAllPosts = async (req, res) => {
 };
 
 export const home = async (req, res) => {
-  const allPosts = await PostModel.find();
+  const allPosts = await PostModel.find().populate("creator");
   res.render("home", {
     title: "BlogVerse - Home",
     posts: allPosts,
@@ -56,6 +55,12 @@ export const post = async (req, res) => {
 
 export const posts = async (req, res) => {
   const user = req.user;
+  if(user === null){
+    return res.status(401).render("401", {
+      title: "BlogVerse - Unauthorized",
+      user: req.user,
+    });
+  }
   const posts = await PostModel.find({ creator: user._id });
   console.log(posts);
   res.render("posts", {

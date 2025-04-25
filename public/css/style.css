@@ -418,46 +418,70 @@ body {
 /* Hero Section */
 .hero-section {
   position: relative;
-  padding: 6rem 0;
+  padding: 5rem 0;
   margin-bottom: var(--section-spacing);
   overflow: hidden;
-  border-radius: var(--border-radius-lg);
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
+  border-radius: var(--border-radius-lg); 
 }
 
-.dark-theme .hero-section {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color),
-    var(--secondary-color)
-  );
-  color: white;
-}
-
-.hero-section::before {
-  content: "";
+.hero-background {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://images.unsplash.com/photo-1499750310107-5fef28a66643")
-    center/cover no-repeat;
-  opacity: 0.1;
+  overflow: hidden;
   z-index: 0;
 }
 
-.hero-section .container {
-  position: relative;
-  z-index: 1;
+.hero-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.hero-section h1 {
+.hero-shape-1 {
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+}
+
+.hero-shape-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -50px;
+  left: -50px;
+}
+
+.hero-shape-3 {
+  width: 150px;
+  height: 150px;
+  top: 50%;
+  left: 30%;
+  transform: translateY(-50%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-title {
   font-weight: 800;
   font-size: 3.5rem;
   line-height: 1.2;
@@ -465,7 +489,26 @@ body {
   letter-spacing: -1px;
 }
 
-.hero-section p {
+.hero-title span {
+  position: relative;
+  display: inline-block;
+  color: #fff;
+  z-index: 1;
+}
+
+.hero-title span::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.3);
+  z-index: -1;
+  border-radius: 10px;
+}
+
+.hero-subtitle {
   font-size: 1.25rem;
   line-height: 1.6;
   margin-bottom: 2rem;
@@ -473,24 +516,113 @@ body {
   max-width: 600px;
 }
 
-.hero-btn {
-  padding: 0.875rem 2.5rem;
-  font-weight: 600;
-  font-size: 1.125rem;
-  border-radius: var(--border-radius-full);
-  background-color: white;
-  color: var(--primary-color);
-  border: none;
-  transition: all 0.3s ease;
-  box-shadow: var(--btn-shadow);
-  text-decoration: none;
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
 }
 
-.hero-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--hover-shadow);
-  background-color: rgba(255, 255, 255, 0.95);
-  color: var(--primary-hover);
+.hero-stats {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.hero-stat-item {
+  text-align: center;
+}
+
+.hero-stat-number {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.hero-stat-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-image-container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-image {
+  max-width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease;
+}
+
+.hero-image:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.hero-element {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  animation: float 3s ease-in-out infinite;
+}
+
+.hero-element-1 {
+  top: 20%;
+  left: 0;
+  animation-delay: 0s;
+}
+
+.hero-element-2 {
+  top: 10%;
+  right: 10%;
+  animation-delay: 0.5s;
+}
+
+.hero-element-3 {
+  bottom: 20%;
+  left: 10%;
+  animation-delay: 1s;
+}
+
+.hero-element-4 {
+  bottom: 10%;
+  right: 0;
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.dark-theme .hero-section {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
 }
 
 .btn-outline-light {

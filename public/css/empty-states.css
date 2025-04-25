@@ -1,0 +1,122 @@
+/* Empty States Styling */
+.empty-state {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 0.5rem;
+}
+
+.empty-state-icon {
+  margin-bottom: 1.5rem;
+}
+
+.empty-state-icon i {
+  font-size: 4rem;
+  color: #cfd8dc;
+}
+
+.empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #37474f;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  color: #78909c;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+}
+
+/* Dark Theme Support */
+.dark-theme .empty-state {
+  background-color: var(--light-color);
+}
+
+.dark-theme .empty-state-icon i {
+  color: var(--gray-color-3);
+}
+
+.dark-theme .empty-state h3 {
+  color: var(--dark-color);
+}
+
+.dark-theme .empty-state p {
+  color: var(--gray-color-2);
+}
+
+/* Empty State Variations */
+.empty-state.empty-state-sm {
+  padding: 2rem 1rem;
+}
+
+.empty-state.empty-state-sm .empty-state-icon i {
+  font-size: 3rem;
+}
+
+.empty-state.empty-state-sm h3 {
+  font-size: 1.25rem;
+}
+
+.empty-state.empty-state-sm p {
+  font-size: 0.875rem;
+}
+
+/* Empty State Animations */
+.empty-state[data-aos] {
+  transition-duration: 0.8s;
+}
+
+/* Empty State Icons */
+.empty-state-icon.posts-icon i {
+  color: #2196f3;
+}
+
+.empty-state-icon.comments-icon i {
+  color: #4caf50;
+}
+
+.empty-state-icon.search-icon i {
+  color: #ff9800;
+}
+
+.empty-state-icon.profile-icon i {
+  color: #9c27b0;
+}
+
+/* Empty State for Different Sections */
+.empty-state.search-empty-state .empty-state-icon i {
+  color: #ff9800;
+}
+
+.empty-state.posts-empty-state .empty-state-icon i {
+  color: #2196f3;
+}
+
+.empty-state.comments-empty-state .empty-state-icon i {
+  color: #4caf50;
+}
+
+.empty-state.profile-empty-state .empty-state-icon i {
+  color: #9c27b0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+  
+  .empty-state-icon i {
+    font-size: 3rem;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.25rem;
+  }
+  
+  .empty-state p {
+    font-size: 0.875rem;
+  }
+}
